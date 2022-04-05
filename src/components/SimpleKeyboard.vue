@@ -5,7 +5,7 @@
 <script setup>
 import Keyboard from "simple-keyboard";
 import "simple-keyboard/build/css/index.css";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 
 const layout = {
   default: [
@@ -17,11 +17,39 @@ const layout = {
 
 const keyboard = ref(null);
 const emit = defineEmits(["onKeyPress"]);
+const props = defineProps({
+  usedLetters: Object
+});
 const onKeyPress = button => emit("onKeyPress", button);
 
 onMounted(() => {
     keyboard.value = new Keyboard("simple-keyboard", { layout, onKeyPress: onKeyPress });
 });
+
+watch(
+  () => props.usedLetters,
+  (usedLetters, prevUsedLetters) => {
+  keyboard.value.addButtonTheme(usedLetters.miss.join(" "), "miss");  
+  keyboard.value.addButtonTheme(usedLetters.found.join(" "), "found");  
+  keyboard.value.addButtonTheme(usedLetters.hint.join(" "), "hint");  
+},
+  { deep: true }  
+);
 </script>
 
-<style></style>
+<style>
+div.miss {
+  @apply bg-gray-500 !important;
+  @apply text-white;
+}
+
+div.found {
+  @apply bg-green-600 !important;
+  @apply text-white;
+}
+
+div.hint:not(.found) {
+  @apply bg-yellow-500 !important;
+  @apply text-white;
+}
+</style>
