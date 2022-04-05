@@ -9,11 +9,11 @@ const KEY_CODE_MAPPING = {
     8: "{bksp}",
 };
 
-const WINNING_WORD = "palabras";
+const WINNING_WORD = "testsiii";
 
 const state = reactive({
     solution: WINNING_WORD,
-    guesses: new Array(WINNING_WORD.length).fill(""),
+    guesses: new Array(5).fill(""),
     guessIndex: 0,
     usedLetters: {
         miss: [],
@@ -55,7 +55,6 @@ onMounted(() => {
     window.addEventListener("keyup", (e) => {
         e.preventDefault();
         let key = getKey(e);
-        console.log(e.keyCode);
         handleInput(key);
     });
 });
@@ -69,7 +68,7 @@ onMounted(() => {
                 :key="index"
                 :value="guess"
                 :solution="state.solution"
-                :submitted="index < state.guesses"
+                :submitted="index < state.guessIndex"
             />
         </div>
         <simple-keyboard @onKeyPress="handleInput" :usedLetters="state.usedLetters" />
